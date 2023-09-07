@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<form id="phoneForm">
+    <p>
+        <label for="phoneNumber">Номер телефона:</label>
+        <input type="tel" id="phoneNumber" class ="type-2" name="phoneNumber" required><br>
+    </p>
+
+    <input type="submit" class="but" value="Проверить">
+</form>
+
+<div id="textContainer">
+    <!-- Здесь будет выводиться текст из сервера -->
+</div>
+
+
+<script>
+  $('#phoneForm').submit(function(event) {
+    event.preventDefault();
+
+<!--  headers.append('GET', 'POST', 'OPTIONS');-->
+
+    // Получаем номер телефона из формы
+    var phoneNumber = $('#phoneNumber').val();
+
+    // Отправляем AJAX GET запрос на сервер
+    $.ajax({
+      url: 'http://localhost:8081/user/fio?phoneNumber=' + phoneNumber,
+      method: 'GET',
+      success: function(data) {
+        console.log(data);
+        // Исходная строка в кодировке ISO-8859-1
+
+
+    var encoder = new TextEncoder("ISO-8859-1");
+    var text_bytes = encoder.encode(data);
+
+    var decoder = new TextDecoder("UTF-8");
+    var text_utf = decoder.decode(text_bytes);
+
+    console.log(text_utf); // Вывод строки в кодировке UTF-8
+        $('#textContainer').text('Данный номер пренадлежит: ' + text_utf);
+      },
+      error: function(error) {
+        console.error('Ошибка при отправке запроса:', error);
+        // Обработка ошибок
+      }
+    });
+  });
+</script>
+</body>
+<style>
+.but{
+  appearance:none;
+  -webkit-appearance:none;
+  /* usual styles */
+  padding:10px;
+  border:none;
+  background-color:#3F51B5;
+  color:#fff;
+  font-weight:600;
+  border-radius:5px;
+}
+
+input {
+  display:block;
+  width:60%;
+  margin:10px 0;
+  padding:10px;
+}
+
+.type-2 {
+  background-color: #fafafa;
+  border:0;
+  box-shadow:0 0 4px rgba(0,0,0,0.3);
+  transition: .3s box-shadow;
+}
+.type-2:hover {
+  box-shadow:0 0 4px rgba(0,0,0,0.5);
+}
+</style>
+</html>

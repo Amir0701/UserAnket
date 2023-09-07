@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="centered-form">
+    <a href="/static/check_phone_number.html">Проверить номер телефона</a>
+    <form id="userForm" method="POST" action="http://localhost:8081/user/submit">
+        <p>
+            <label for="full_name">ФИО:</label>
+            <input type="text" id="full_name" class ="type-2" name="fio" required><br>
+        </p>
+
+        <p>
+            <label for="passport_number">Номер пасспорта:</label>
+            <input type="text" id="passport_number"  class ="type-2" name="passportNumber" required><br>
+        </p>
+
+        <p>
+            <label for="email">Почта:</label>
+            <input type="email" id="email"  class ="type-2" name="email" required><br>
+        </p>
+
+        <p>
+            <label for="phone_number">Номер телефона:</label>
+            <input type="tel" id="phone_number"  class ="type-2" name="phoneNumber" required><br>
+        </p>
+
+        <input type="submit" class="but" value="Отправить">
+    </form>
+</div>
+
+
+<script>
+    document.getElementById('userForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const fullName = document.getElementById('full_name').value;
+    const passportNumbe = document.getElementById('passport_number').value;
+    const email = document.getElementById('email').value;
+    const phoneNumbe = document.getElementById('phone_number').value;
+    const userId = 3
+
+    const user = {
+        id: userId,
+        fio: fullName,
+        passportNumber: passportNumbe,
+        email: email,
+        phoneNumber: phoneNumbe
+    };
+
+
+// Отправляем данные на сервер с помощью AJAX
+$.ajax({
+    url: 'http://localhost:8081/user/submit',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(user),
+    success: function(response) {
+        console.log('Form submitted successfully');
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Form submission failed');
+        console.error('Error:', errorThrown);
+    }
+});
+});
+
+</script>
+
+</body>
+<style>
+
+body {
+  margin:20px;
+  display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+}
+* {
+  box-sizing: border-box;
+}
+input {
+  display:block;
+  width:60%;
+  margin:10px 0;
+  padding:10px;
+}
+
+.type-2 {
+  background-color: #fafafa;
+  border:0;
+  box-shadow:0 0 4px rgba(0,0,0,0.3);
+  transition: .3s box-shadow;
+}
+.type-2:hover {
+  box-shadow:0 0 4px rgba(0,0,0,0.5);
+}
+
+.centered-form {
+    /* Добавьте этот класс к вашей форме */
+    width:100%
+}
+
+.but{
+appearance:none;
+  -webkit-appearance:none;
+  /* usual styles */
+  padding:10px;
+  border:none;
+  background-color:#3F51B5;
+  color:#fff;
+  font-weight:600;
+  border-radius:5px;
+}
+</style>
+</html>
